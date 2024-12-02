@@ -1,1 +1,5 @@
+# Node
 node_modules
+
+# Private session key for fetching input
+.session_cookie
