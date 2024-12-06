@@ -128,15 +128,15 @@ const solve2 = (fileName: string) => {
 
   let counter = 0;
   let [row, col] = findGuard(grid, size);
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      if (!(i === row && j === col) && grid[i][j] !== "#") {
-        grid[i][j] = "#";
-        if (checkLoop(grid, size, row, col)) {
-          counter++;
-        }
-        grid[i][j] = ".";
+  const visits = findAllVisits(grid, size, row, col);
+  for (const visit of visits) {
+    const [i, j] = visit.split(",").map(Number);
+    if (!(i === row && j === col) && grid[i][j] !== "#") {
+      grid[i][j] = "#";
+      if (checkLoop(grid, size, row, col)) {
+        counter++;
       }
+      grid[i][j] = ".";
     }
   }
 
@@ -151,8 +151,17 @@ const main = (runExampleInput: boolean) => {
     runExampleInput ? "example_input" : "input"
   }`;
   console.log(`Solving ${runExampleInput ? "example" : "real"} input`);
-  console.log(`Task 1: ${solve1(filename)}`);
-  console.log(`Task 2: ${solve2(filename)}`);
+  const funcs = [solve1, solve2];
+  for (const func of funcs) {
+    const startTime = performance.now();
+    const task1 = func(filename);
+    const endTime = performance.now();
+    console.log(
+      `${func.name}: ${task1} (runtime: ${
+        Math.round((endTime - startTime) / 10) / 100
+      } seconds)`
+    );
+  }
 };
 
 // Run!
