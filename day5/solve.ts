@@ -81,8 +81,17 @@ const main = (runExampleInput: boolean) => {
     runExampleInput ? "example_input" : "input"
   }`;
   console.log(`Solving ${runExampleInput ? "example" : "real"} input`);
-  console.log(`Task 1: ${solve1(filename)}`);
-  console.log(`Task 2: ${solve2(filename)}`);
+  const funcs = [solve1, solve2];
+  for (const func of funcs) {
+    const startTime = performance.now();
+    const task1 = func(filename);
+    const endTime = performance.now();
+    console.log(
+      `${func.name}: ${task1} (runtime: ${
+        Math.round(endTime - startTime) / 1000
+      } seconds)`
+    );
+  }
 };
 
 // Run!

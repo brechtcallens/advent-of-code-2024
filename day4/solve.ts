@@ -97,7 +97,6 @@ const solve2 = (fileName: string) => {
           checkLetter(grid, rows, cols, pos, option, 1, "A") &&
           checkLetter(grid, rows, cols, pos, option, 2, "S")
         ) {
-          console.log("pos", pos);
           const off_pos = [pos[0] + startOffset[0], pos[1] + startOffset[1]];
           if (
             (checkLetter(grid, rows, cols, off_pos, direction, 0, "M") &&
@@ -124,8 +123,17 @@ const main = (runExampleInput: boolean) => {
     runExampleInput ? "example_input" : "input"
   }`;
   console.log(`Solving ${runExampleInput ? "example" : "real"} input`);
-  console.log(`Task 1: ${solve1(filename)}`);
-  console.log(`Task 2: ${solve2(filename)}`);
+  const funcs = [solve1, solve2];
+  for (const func of funcs) {
+    const startTime = performance.now();
+    const task1 = func(filename);
+    const endTime = performance.now();
+    console.log(
+      `${func.name}: ${task1} (runtime: ${
+        Math.round(endTime - startTime) / 1000
+      } seconds)`
+    );
+  }
 };
 
 // Run!

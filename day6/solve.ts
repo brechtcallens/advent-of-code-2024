@@ -158,7 +158,7 @@ const main = (runExampleInput: boolean) => {
     const endTime = performance.now();
     console.log(
       `${func.name}: ${task1} (runtime: ${
-        Math.round((endTime - startTime) / 10) / 100
+        Math.round(endTime - startTime) / 1000
       } seconds)`
     );
   }
