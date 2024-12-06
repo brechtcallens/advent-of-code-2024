@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "solve": "tsx day5/solve.ts"
+    "solve": "tsx day6/solve.ts"
   },
   "author": "",
   "license": "ISC",
