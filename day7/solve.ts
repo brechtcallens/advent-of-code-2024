@@ -35,11 +35,18 @@ const solveRecursive = (
     return subtotal === total;
   }
 
+  // Return early once we go over.
+  if (subtotal > total) {
+    return false;
+  }
+
   const [firstNumber, ...otherNumbers] = numbers;
+
   // If no subtotal yet, the first element needs to be chosen.
   if (subtotal === 0) {
     return solveRecursive(total, firstNumber, otherNumbers, operations);
   }
+
   // Otherwise go over operations DF recursively until all options or exhausted or a solution is found.
   for (const operation of operations) {
     const newSubTotal = operation(subtotal, firstNumber);
@@ -47,6 +54,7 @@ const solveRecursive = (
       return true;
     }
   }
+
   // Nothing returned true, so no solution exists from this point onwards.
   return false;
 };
