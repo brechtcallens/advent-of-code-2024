@@ -59,6 +59,32 @@ const solveRecursive = (
   return false;
 };
 
+const solveIteratively = (
+  total: number,
+  numbers: number[],
+  operations: ((total: number, n: number) => number)[]
+) => {
+  const [firstNumber, ...firstOtherNumbers] = numbers;
+  const stack: [number, number[]][] = [[firstNumber, firstOtherNumbers]];
+  while (stack.length > 0) {
+    const [currentNumber, currentOtherNumbers] = stack.pop()!;
+    if (currentOtherNumbers.length > 0) {
+      const [nextNumber, ...nextOtherNumbers] = currentOtherNumbers;
+      for (const operation of operations) {
+        const newSubTotal = operation(currentNumber, nextNumber);
+        if (newSubTotal <= total) {
+          stack.push([newSubTotal, nextOtherNumbers]);
+        }
+      }
+    } else {
+      if (currentNumber === total) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 const solve1 = (fileName: string) => {
   const input = parse(fileName);
   const amount = input.reduce((currentAmount, totalWithNumbers) => {
