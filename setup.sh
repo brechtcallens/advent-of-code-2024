@@ -5,7 +5,8 @@ if [[ $# -ne 1 ]]; then
    exit 1;
 fi
 
-DAY_DIR="day$1"
+DAY="day$1"
+DAY_DIR="src/$DAY"
 if [ -d "$DAY_DIR" ]; then
    echo "Directory '$DAY_DIR' already exists, skipping..."
 else
@@ -15,7 +16,8 @@ else
 fi
 
 echo "Update package.json to run solver for day $1"
-sed -i "s/\"solve\".*/\"solve\": \"tsx $DAY_DIR\/solve.ts\"/" package.json
+sed -i "s/\"start\".*/\"start\": \"node build\/$DAY\/solve.js\",/" package.json
+sed -i "s/\"solve\".*/\"solve\": \"tsx src\/$DAY\/solve.ts\",/" package.json
 
 COOKIE_FILE=".session_cookie"
 if [ -f "$COOKIE_FILE" ]; then
