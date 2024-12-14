@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node build/day13/solve.js",
-    "solve": "tsx src/day13/solve.ts",
+    "start": "node build/day14/solve.js",
+    "solve": "tsx src/day14/solve.ts",
     "prestart": "npm run build",
     "build": "tsc",
     "postbuild": "npm run copy-files",
