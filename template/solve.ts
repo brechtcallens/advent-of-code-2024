@@ -26,7 +26,7 @@ const solve2 = (fileName: string) => {
 const main = (runExampleInput: boolean) => {
   const folderPath = import.meta.url
     .replace("file://", "")
-    .replace("/solve.ts", "");
+    .replace(/solve\.(js|ts)/, "");
   const filename = `${folderPath}/${
     runExampleInput ? "example_input" : "input"
   }`;
