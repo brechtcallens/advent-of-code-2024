@@ -59,9 +59,7 @@ const solve1 = (fileName: string, example: boolean) => {
 };
 
 const isTreeFormation = (robots: Robot[], gridInfo: GridInfo, it: number) => {
-  const grid = Array(gridInfo.rows)
-    .fill(".")
-    .map(() => Array(gridInfo.cols).fill("."));
+  const grid = Array(gridInfo.rows).map(() => Array(gridInfo.cols).fill("."));
   robots.forEach((robot) => (grid[robot.y][robot.x] = "X"));
 
   // Big ass assumption that a Christmas tree in ASCII art would consist of some neighbouring X's.
