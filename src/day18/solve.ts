@@ -10,7 +10,7 @@ const parse = (fileName: string, size: number, drops: number) => {
     grid[y][x] = "#";
   }
 
-  return grid;
+  return { grid, lines };
 };
 
 class PriorityQueue<T extends { cost: number }> {
@@ -47,51 +47,10 @@ const directions: NumberPair[] = [
   [0, -1],
 ];
 
-const solve1 = (fileName: string, example: boolean) => {
-  const size = example ? 7 : 71;
-  const drops = example ? 12 : 1024;
-
-  const grid = parse(fileName, size, drops);
-  const costs = [...Array(size)].map(() =>
-    [...Array<number>(size)].fill(Number.MAX_SAFE_INTEGER)
-  );
-
-  const queue = new PriorityQueue<{ position: NumberPair; cost: number }>();
-  queue.enqueue({ position: [0, 0], cost: 0 });
-  while (queue.size() > 0) {
-    const { position, cost } = queue.dequeue();
-
-    if (position[0] === size - 1 && position[1] === size - 1) {
-      return cost;
-    }
-
-    if (costs[position[0]][position[1]] <= cost) {
-      continue;
-    }
-    costs[position[0]][position[1]] = cost;
-
-    for (const [dy, dx] of directions) {
-      const [nextY, nextX] = [position[0] + dy, position[1] + dx];
-      if (
-        nextX < 0 ||
-        nextX >= size ||
-        nextY < 0 ||
-        nextY >= size ||
-        grid[nextY][nextX] === "#"
-      ) {
-        continue;
-      }
-      queue.enqueue({ position: [nextY, nextX], cost: cost + 1 });
-    }
-  }
-
-  return -1;
-};
-
 const solve = (fileName: string, example: boolean, drops: number) => {
   const size = example ? 7 : 71;
 
-  const grid = parse(fileName, size, drops);
+  const { grid } = parse(fileName, size, drops);
   const costs = [...Array(size)].map(() =>
     [...Array<number>(size)].fill(Number.MAX_SAFE_INTEGER)
   );
@@ -128,14 +87,19 @@ const solve = (fileName: string, example: boolean, drops: number) => {
   return -1;
 };
 
-const solve2 = (fileName: string, example: boolean) => {
-  const size = example ? 7 : 71;
+const solve1 = (fileName: string, example: boolean) => {
+  const drops = example ? 12 : 1024;
+  return solve(fileName, example, drops);
+};
 
+const solve2 = (fileName: string, example: boolean) => {
   let drops = 1;
   while (solve(fileName, example, drops) !== -1) {
     drops++;
   }
-  return fs.readFileSync(fileName, "utf8").split("\n")[drops - 1];
+
+  const { lines } = parse(fileName, 0, 0);
+  return lines[drops - 1];
 };
 
 const main = (runExampleInput: boolean) => {
