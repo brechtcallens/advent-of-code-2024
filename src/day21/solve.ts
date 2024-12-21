@@ -137,7 +137,6 @@ const parse = (fileName: string) => {
 const getCombosHorizontally = (
   input: string,
   mapping: Record<string, Record<string, string[]>>,
-  withA: boolean,
   subsolution: string = "",
   previous: string = "A"
 ) => {
@@ -152,8 +151,7 @@ const getCombosHorizontally = (
     const combos = getCombosHorizontally(
       otherinput.join(""),
       mapping,
-      withA,
-      subsolution + option + (withA ? "A" : ""),
+      subsolution + option + "A",
       current
     );
     subsolutions.push(...combos);
@@ -169,23 +167,22 @@ const solve1 = (fileName: string) => {
   let total = 0;
   for (const line of lines) {
     let lineMin = Number.MAX_VALUE;
-    const combos1 = getCombosHorizontally(line, numKeypadMapping, true);
+    const combos1 = getCombosHorizontally(line, numKeypadMapping);
     for (const combo1 of combos1) {
-      // console.log("1.", combo1);
-      const combos2 = getCombosHorizontally(combo1, dirKeypadMapping, true);
+      const combos2 = getCombosHorizontally(combo1, dirKeypadMapping);
       for (const combo2 of combos2) {
-        // console.log("   2.", combo2);
-        const combos3 = getCombosHorizontally(combo2, dirKeypadMapping, true);
+        const combos3 = getCombosHorizontally(combo2, dirKeypadMapping);
         for (const combo3 of combos3) {
-          // console.log("      3.", combo3);
           if (combo3.length < lineMin) {
             lineMin = combo3.length;
           }
         }
       }
     }
-    console.log(parseInt(line.slice(0, line.length - 1)), lineMin);
-    total += parseInt(line.slice(0, line.length - 1)) * lineMin;
+
+    const lineNr = parseInt(line.slice(0, line.length - 1));
+    total += lineNr * lineMin;
+    // console.log(lineNr, lineMin);
   }
 
   return total;
