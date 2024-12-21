@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --enable-experimental-regexp-engine-on-excessive-backtracks build/day20/solve.js",
-    "solve": "tsx src/day20/solve.ts",
+    "start": "node build/day21/solve.js",
+    "solve": "tsx src/day21/solve.ts",
     "prestart": "npm run build",
     "build": "tsc",
     "postbuild": "npm run copy-files",
@@ -15,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.1",
     "tsx": "^4.19.2"
   },
   "devDependencies": {
