@@ -34,8 +34,59 @@ const solve1 = (fileName: string) => {
 
 const solve2 = (fileName: string) => {
   const lines = parse(fileName);
-  // Solve!
-  return `${lines[0]}, ${lines.length}`;
+
+  const changesToValues: Record<string, number>[] = [];
+  const changesOptions = new Set<string>();
+  const changes: number[][] = [];
+
+  for (const line of lines) {
+    let secret = line;
+    let prevValue = secret % 10n;
+
+    const buyerChanges: number[] = [];
+    const buyerChangesToValue: Record<string, number> = {};
+
+    for (let it = 0; it < 2000 - 1; it++) {
+      secret = nextSecret(secret);
+      const nextValue = secret % 10n;
+
+      buyerChanges.push(Number(nextValue - prevValue));
+      if (buyerChanges.length >= 4) {
+        const changesKey = buyerChanges
+          .slice(buyerChanges.length - 4, buyerChanges.length)
+          .join(",");
+        if (!(changesKey in buyerChangesToValue)) {
+          buyerChangesToValue[changesKey] = Number(nextValue);
+        }
+      }
+
+      prevValue = nextValue;
+    }
+
+    changesToValues.push(buyerChangesToValue);
+    Object.keys(buyerChangesToValue).forEach((change) =>
+      changesOptions.add(change)
+    );
+    changes.push(buyerChanges);
+  }
+
+  let bestOption = undefined;
+  let bestScore = Number.MIN_SAFE_INTEGER;
+  const allChangeOptions = [...changesOptions];
+  for (const changeOption of allChangeOptions) {
+    let total = 0;
+    changesToValues.forEach((changesToValue, index) => {
+      if (changeOption in changesToValue) {
+        total += changesToValue[changeOption];
+      }
+    });
+    if (total > bestScore) {
+      bestScore = total;
+      bestOption = changeOption;
+    }
+  }
+
+  return bestScore;
 };
 
 const main = (runExampleInput: boolean) => {
