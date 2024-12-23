@@ -9,13 +9,9 @@ const parse = (fileName: string) => {
     .sort();
 
   const connections: Record<string, Set<string>> = {};
-  for (const rawConnection of rawConnections) {
-    connections[rawConnection[0]] = (
-      connections[rawConnection[0]] || new Set<string>()
-    ).add(rawConnection[1]);
-    connections[rawConnection[1]] = (
-      connections[rawConnection[1]] || new Set<string>()
-    ).add(rawConnection[0]);
+  for (const [node1, node2] of rawConnections) {
+    connections[node1] = (connections[node1] ?? new Set<string>()).add(node2);
+    connections[node2] = (connections[node2] ?? new Set<string>()).add(node1);
   }
 
   return connections;
