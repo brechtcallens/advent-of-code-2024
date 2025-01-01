@@ -15,7 +15,7 @@ const solve1 = (fileName: string) => {
   let pointer = 0;
   const output: number[] = [];
   while (0 <= pointer && pointer < program.length - 1) {
-    console.log(`A: ${bits(A)}, B: ${bits(B)}, C: ${bits(C)}`);
+    // console.log(`A: ${bits(A)}, B: ${bits(B)}, C: ${bits(C)}`);
     const operandValues = [0, 1, 2, 3, A, B, C, -1];
     const literalOperand = program[pointer + 1];
     const comboOperand = operandValues[literalOperand];
@@ -42,7 +42,7 @@ const solve1 = (fileName: string) => {
         B = B ^ C;
         break;
       case 5:
-        console.log(comboOperand % 8);
+        // console.log(comboOperand % 8);
         output.push(comboOperand % 8);
         break;
       case 6:
@@ -60,12 +60,22 @@ const solve1 = (fileName: string) => {
   return output.join(",");
 };
 
-const solve2 = (fileName: string) => {
+const individualSolutions = (fileName: string) => {
   let { B: initB, C: initC, program } = parse(fileName);
 
+  const solutions = {
+    0: new Set<number>(),
+    1: new Set<number>(),
+    2: new Set<number>(),
+    3: new Set<number>(),
+    4: new Set<number>(),
+    5: new Set<number>(),
+    6: new Set<number>(),
+    7: new Set<number>(),
+  };
   let it = 0;
   let A: number, B: number, C: number;
-  while (true) {
+  while (it < Math.pow(2, 10)) {
     // Reset
     A = it;
     B = initB;
@@ -103,13 +113,14 @@ const solve2 = (fileName: string) => {
           break;
         case 5:
           const outputDigit = comboOperand % 8;
-          if (outputDigit !== program[programIndexToCheck]) {
-            isValid = false;
-          }
+          // if (outputDigit !== program[programIndexToCheck]) {
+          isValid = false;
+          // }
+          solutions[outputDigit].add(it);
           programIndexToCheck++;
-          if (programIndexToCheck === program.length) {
-            return it;
-          }
+          // if (programIndexToCheck === program.length) {
+          //   return it;
+          // }
           break;
         case 6:
           B = Math.trunc(A / Math.pow(2, comboOperand));
@@ -127,6 +138,49 @@ const solve2 = (fileName: string) => {
     // Check next A
     it++;
   }
+
+  return solutions;
+};
+
+const solveRecursive = (
+  current: string,
+  others: number[],
+  solutions: ReturnType<typeof individualSolutions>
+) => {
+  if (others.length === 0) {
+    return current;
+  }
+
+  const [next, ...nextOthers] = others;
+  const potentials = [...solutions[next]] as number[];
+  for (const potential of potentials) {
+    const potentialString = (potential >>> 0).toString(2).padStart(10, "0");
+    if (current.length === 0) {
+      const sol = solveRecursive(potentialString, nextOthers, solutions);
+      if (sol) {
+        return sol;
+      }
+    } else {
+      const end = current.slice(current.length - 7, current.length);
+      if (potentialString.startsWith(end)) {
+        const sol = solveRecursive(
+          current + potentialString.slice(7),
+          nextOthers,
+          solutions
+        );
+        if (sol) {
+          return sol;
+        }
+      }
+    }
+  }
+};
+
+const solve2 = (fileName: string) => {
+  let { program } = parse(fileName);
+  const solutions = individualSolutions(fileName);
+  const actualSolution = solveRecursive("", program.reverse(), solutions);
+  return parseInt(actualSolution, 2);
 };
 
 const main = (runExampleInput: boolean) => {
